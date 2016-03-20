@@ -97,12 +97,13 @@ function done() {
     logger.info('Done. Press Ctrl-C to exit');
 }
 
-function truncate(value, length) {
+function truncate(value, length, escape) {
     let val = value.substring(0, length);
     if (value.length > length) {
         val += '...';
     }
-    return Circuit.Utils.textToHtmlEscaped(val);
+    escape && (val = Circuit.Utils.textToHtmlEscaped(val));
+    return val;
 }
 //*********************************************************************
 // init
@@ -207,7 +208,7 @@ function execJiraRequest(path, params) {
 // buildContent
 //*********************************************************************
 function buildContent(issue) {
-    let description = truncate(issue.description, 400);
+    let description = truncate(issue.description, 400, true);
 
     return `Version: <b>${issue.affectedVersion}</b><br>` +
         `Priority: <b>${issue.priority}</b><br>` +
