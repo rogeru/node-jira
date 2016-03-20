@@ -1,0 +1,33 @@
+{
+    "circuit" : {
+        "email": "<circuit email>",
+        "password": "<password>",
+        "domain": "<circuit domain>",
+        "convId": "<convId>"
+    },
+    "jira" : {
+        "username": "<jira username>",
+        "password": "<jira password>",
+        "domain": "<jira public accessible domain>",
+        "internalDomain": "<jira interal accessible domain>",
+        "issuesPoll" : {
+            "query": {
+                "maxResults": 200,
+                "fields": ["summary","description","creator","reporter","status","priority","assignee","created"],
+                "jql": "project=ANS AND issuetype=Bug AND created>-6m ORDER BY created ASC"
+            },            
+            "interval": 5,
+            "name": "New P1 issues"
+        },
+        "reportPoll" : {
+            "query": {
+                "maxResults": 500,
+                "fields": ["summary","description","creator","reporter","status","priority","assignee","created","versions"],
+                "jql": "project = ANS AND issuetype = Bug AND (priority = P0 OR priority = P1) AND status not in (Closed, Resolved, Integrated) ORDER BY priority DESC, created"
+            },
+            "interval": 24,
+            "name": "Daily P0/P1 Open Bugs Report"
+        }
+    },
+    "sdkLogLevel": "error"
+}
