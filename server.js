@@ -308,7 +308,7 @@ function postDailyReport(issuesObj) {
             `${summary}<br>`; 
     }
 
-    logger.info(`Posting report with ${issues.length} issues`);
+    logger.info(`Posting report with ${issuesObj.P0.length} P0 and ${issuesObj.P1.length} P1 issues`);
 
     let msg = {
         subject: config.jira.reportPoll.name,
@@ -364,7 +364,7 @@ function watchJira() {
     setInterval(() => {
         runDailyReport()
             .catch(logger.error)
-    }, config.jira.issuesPoll.interval * 60 * 60 * 1000);
+    }, config.jira.reportPoll.interval * 60 * 60 * 1000);
     
     // Run first daily report now
     return runDailyReport();
