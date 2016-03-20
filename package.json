@@ -1,0 +1,16 @@
+{
+  "name": "node-jira",
+  "version": "1.0.0",
+  "description": "Post P0 and P1 issues in Jira to a conversation",
+  "main": "server.js",
+  "dependencies": {
+    "bunyan": "^1.5.1",
+    "node-rest-client": "^1.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Unify Inc.",
+  "license": "MIT"
+}
