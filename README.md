@@ -24,8 +24,15 @@ Edit config.json
     npm install
     wget https://circuitsandbox.net/circuit.tgz
     npm install circuit.tgz
-    ./node_modules/.bin/forever server.js | bunyan
-``` 
+    node server.js | bunyan
+```
+
+Run with forever in background 
+```bash
+    forever start -l forever.log -o out.log -e err.log server.js
+    tail -f out.log | bunyan
+```
+
 
  If you do not have wget installed you can use curl to download circuit.tgz
 ```bash

@@ -97,12 +97,13 @@ function done() {
     logger.info('Done. Press Ctrl-C to exit');
 }
 
-function truncate(value, length) {
+function truncate(value, length, escape) {
     let val = value.substring(0, length);
     if (value.length > length) {
         val += '...';
     }
-    return Circuit.Utils.textToHtmlEscaped(val);
+    escape && (val = Circuit.Utils.textToHtmlEscaped(val));
+    return val;
 }
 //*********************************************************************
 // init
@@ -207,7 +208,7 @@ function execJiraRequest(path, params) {
 // buildContent
 //*********************************************************************
 function buildContent(issue) {
-    let description = truncate(issue.description, 400);
+    let description = truncate(issue.description, 400, true);
 
     return `Version: <b>${issue.affectedVersion}</b><br>` +
         `Priority: <b>${issue.priority}</b><br>` +
@@ -315,15 +316,15 @@ function postDailyReport(issuesObj) {
         contentType: Circuit.Constants.TextItemContentType.RICH
     };
     
-    msg.content = msg.content.concat(`<b>${issuesObj.P0.length} P0's</b> and <b>${issuesObj.P1.length} P1's</b><br><br>`);
+    msg.content = msg.content.concat(`<b>${issuesObj.P0.length} P0's</b> and <b>${issuesObj.P1.length} P1's</b><br>`);
     
     let prevIssue;
     issuesObj.P0.forEach(issue => {
         if (!prevIssue || prevIssue.affectedVersion !== issue.affectedVersion) {
             if (issue.affectedVersion) {
-                msg.content = msg.content.concat(`<span class="rich-text-highlight">P0 for version ${issue.affectedVersion}:</span><br>`);
+                msg.content = msg.content.concat(`<br><span class="rich-text-highlight">P0 for version ${issue.affectedVersion}:</span><br>`);
             } else {
-                msg.content = msg.content.concat(`<span class="rich-text-highlight">P0 for unassigned version:</span><br>`);
+                msg.content = msg.content.concat(`<br><span class="rich-text-highlight">P0 for unassigned version:</span><br>`);
             }
         }
         msg.content = msg.content.concat(buildIssueContent(issue));
