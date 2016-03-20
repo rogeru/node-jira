@@ -14,10 +14,10 @@
             "query": {
                 "maxResults": 200,
                 "fields": ["summary","description","creator","reporter","status","priority","assignee","created"],
-                "jql": "project=ANS AND issuetype=Bug AND created>-6m ORDER BY created ASC"
+                "jql": "project=ANS AND issuetype=Bug AND (priority = P0 OR priority = P1) AND created>-6m ORDER BY created ASC"
             },            
             "interval": 5,
-            "name": "New P1 issues"
+            "name": "New P0 and P1 issues"
         },
         "reportPoll" : {
             "query": {
