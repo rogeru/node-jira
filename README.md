@@ -1,6 +1,7 @@
 # node-jira
 Automatically create posts in a conversations with P1 issues from Jira
 
+
 ## Requirements ##
 * [node 4.x](http://nodejs.org/download/)
 * [circuit module](https://circuitsandbox.net/sdk/)

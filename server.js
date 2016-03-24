@@ -51,7 +51,11 @@ let assert = require('assert');
 // Circuit SDK
 let Circuit = require('circuit');
 
+// REST Client
 let RestClient = new require('node-rest-client').Client;
+
+// Markdown to HTML converter
+let marked = require('marked');
 
 // Setup bunyan logger
 Circuit.setLogger(sdkLogger);
@@ -77,6 +81,7 @@ class Issue {
     this.reporter = issue.fields.reporter ? issue.fields.reporter.displayName : '';
     this.status = issue.fields.status.name;
     this.priority = issue.fields.priority.name;
+    this.labels = issue.fields.labels ? issue.fields.labels : [];
     this.affectedVersion = (issue.fields.versions && issue.fields.versions.length) ? issue.fields.versions[0].name : '';
   }
   
@@ -208,12 +213,13 @@ function execJiraRequest(path, params) {
 // buildContent
 //*********************************************************************
 function buildContent(issue) {
-    let description = truncate(issue.description, 400, true);
+    let description = truncate(marked(issue.description), 400, false);
 
     return `Version: <b>${issue.affectedVersion}</b><br>` +
         `Priority: <b>${issue.priority}</b><br>` +
         `Reporter: <b>${issue.reporter}</b><br>` +
         `Assignee: <b>${issue.assignee}</b><br>` +
+        `Labels: <b>${issue.labels.join(', ')}</b><br>` +
         `<a href="${config.jira.internalDomain}/browse/${issue.key}">${issue.key}</a>&nbsp;(<a href="${config.jira.domain}/browse/${issue.key}">public url</a>)<br>` +
         `----------<br>` +
         `${description}`;
@@ -369,6 +375,7 @@ function watchJira() {
     // Run first daily report now
     return runDailyReport();
 }
+
 
 //*********************************************************************
 // run
