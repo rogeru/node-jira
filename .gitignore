@@ -39,4 +39,5 @@ circuit.tgz
 .vscode
 
 config.json
+circuit-*.tgz
 
