@@ -83,6 +83,14 @@ class Issue {
     this.priority = issue.fields.priority.name;
     this.labels = issue.fields.labels ? issue.fields.labels : [];
     this.affectedVersion = (issue.fields.versions && issue.fields.versions.length) ? issue.fields.versions[0].name : '';
+    
+    this.sprint = 'no sprint';
+    if (issue.fields.customfield_10820 && issue.fields.customfield_10820.length) {
+        let match = issue.fields.customfield_10820[0].match(/name=(.*?),/);
+        if (match && match.length > 1) {
+            this.sprint = match[1];
+        }
+    }
   }
   
   toSummary() {
@@ -213,13 +221,16 @@ function execJiraRequest(path, params) {
 // buildContent
 //*********************************************************************
 function buildContent(issue) {
-    let description = truncate(marked(issue.description), 400, false);
+    let description = truncate(issue.description, 400);
+    description = marked(description);
 
     return `Version: <b>${issue.affectedVersion}</b><br>` +
         `Priority: <b>${issue.priority}</b><br>` +
+        `Status: <b>${issue.status}</b><br>` +
         `Reporter: <b>${issue.reporter}</b><br>` +
         `Assignee: <b>${issue.assignee}</b><br>` +
         `Labels: <b>${issue.labels.join(', ')}</b><br>` +
+        `Sprint: <b>${issue.sprint}</b><br>` +
         `<a href="${config.jira.internalDomain}/browse/${issue.key}">${issue.key}</a>&nbsp;(<a href="${config.jira.domain}/browse/${issue.key}">public url</a>)<br>` +
         `----------<br>` +
         `${description}`;
@@ -234,7 +245,7 @@ function postIssues(issues) {
     issues.forEach(issue => {
         logger.info('Posting ' + issue.key);
         let msg = {
-            subject: truncate(issue.summary, 100),
+            subject: truncate(issue.summary, 95),
             content: buildContent(issue),
             contentType: Circuit.Constants.TextItemContentType.RICH
         };
@@ -310,7 +321,7 @@ function postDailyReport(issuesObj) {
         let result;
         let summary = truncate(issue.summary, 78);
         return `<a href="${config.jira.internalDomain}/browse/${issue.key}">${issue.key}</a>&nbsp;(<a href="${config.jira.domain}/browse/${issue.key}">p</a>)` +
-            (issue.assignee ? ` with <b>${issue.assignee}</b>` : ` unassigned`) + `<br>` +
+            (issue.assignee ? `, <b>${issue.assignee}</b>` : ` unassigned`) + ` (<i>${issue.status}, ${issue.sprint}</i>)` + `<br>` +
             `${summary}<br>`; 
     }
 
