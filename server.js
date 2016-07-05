@@ -131,7 +131,7 @@ function init() {
 //*********************************************************************
 function logonCircuit() {
     client = new Circuit.Client({domain: config.circuit.domain});
-    return client.logon(config.circuit.email, config.circuit.password, {mobile: true})
+    return client.logon(config.circuit.email, config.circuit.password, {mobile: true, persistent: true})
         .then((user) => logger.info(`Logged on to ${config.circuit.domain} as ${user.emailAddress}`));
 }
 
