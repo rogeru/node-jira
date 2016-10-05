@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015 Unify Inc.
+    Copyright (c) 2016 Unify Inc.
 
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the "Software"),
@@ -130,9 +130,13 @@ function init() {
 // logonCircuit
 //*********************************************************************
 function logonCircuit() {
-    client = new Circuit.Client({domain: config.circuit.domain});
-    return client.logon(config.circuit.email, config.circuit.password, {mobile: true})
-        .then((user) => logger.info(`Logged on to ${config.circuit.domain} as ${user.emailAddress}`));
+    client = new Circuit.Client({
+        domain: config.circuit.domain,
+        client_id: config.circuit.client_id,
+        client_secret: config.circuit.client_secret
+    });
+    return client.logon({mobile: true})
+        .then((user) => logger.info(`Logged on to ${config.circuit.domain}`));
 }
 
 //*********************************************************************
