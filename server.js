@@ -44,6 +44,7 @@ let logger = bunyan.createLogger({
     stream: process.stdout,
     level: 'debug'
 });
+logger.info('logger initialized');
 
 // Node utils
 let assert = require('assert');
@@ -135,8 +136,8 @@ function logonCircuit() {
         client_id: config.circuit.client_id,
         client_secret: config.circuit.client_secret
     });
-    return client.logon({mobile: true})
-        .then((user) => logger.info(`Logged on to ${config.circuit.domain}`));
+    return client.logon({email: config.circuit.email, password: config.circuit.password}, {mobile: true})
+        .then(user => logger.info(`Logged on to ${config.circuit.domain}`));
 }
 
 //*********************************************************************
